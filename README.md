@@ -1,0 +1,1 @@
+# prestige-shopify-theme-size-variants-on-collection-page
