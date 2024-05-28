@@ -1,0 +1,41 @@
+        {%- if show_size_swatch -%}
+          {%- assign size_swatch_list = '' -%}
+
+          {%- capture size_swatch -%}
+            {%- assign size_label = 'size,størrelse,STR,str' | split: ',' -%}
+            {%- capture size_name -%}{{ section.id }}-{{ product.id }}-{{ downcased_option }}{%- endcapture -%}
+
+            {%- for option in product.options_with_values -%}
+              {%- assign downcased_option = option.name | downcase -%}
+
+              {%- if size_label contains downcased_option -%}
+                {%- assign variant_option = 'option' | append: forloop.index -%}
+
+                {%- for value in option.values -%}
+                  {%- assign downcased_value = value | downcase -%}
+                  {%- capture size_id -%}{{ section.id }}-{{ product.id }}-{{ downcased_option }}-{{ forloop.index }}{%- endcapture -%}
+
+                  {%- for variant in product.variants -%}
+                    {%- if variant[variant_option] == value -%}
+                      {%- assign variant_for_value = variant -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  <div class="ProductItem__SizeSwatchItem">
+                    <input class="SizeSwatch__Radio" type="radio" name="{{ size_name }}" id="{{ size_id }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked="checked"{% endif %} data-id="{{ variant_for_value.id }}" data-variant-url="{{ variant_for_value.url }}" aria-hidden="true">
+                    <label class="SizeSwatch SizeSwatch--small" for="{{ size_id }}">{{ value | escape }}</label>
+                  </div>
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+
+          {%- if size_swatch != blank -%}
+            {%- capture size_swatch_list -%}
+              <div class="ProductItem__SizeSwatchList">
+                {{- size_swatch -}}
+              </div>
+            {%- endcapture -%}
+          {%- endif -%}
+        {%- endif -%}
